@@ -1,0 +1,9 @@
+[submodule "submodule/raspberryio"]
+	path = submodule/raspberryio
+	url = https://github.com/unosquare/raspberryio.git
+[submodule "submodule/swan"]
+	path = submodule/swan
+	url = https://github.com/unosquare/swan.git
+[submodule "submodule/wiringpi-dotnet"]
+	path = submodule/wiringpi-dotnet
+	url = https://github.com/unosquare/wiringpi-dotnet.git
