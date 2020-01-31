@@ -6,6 +6,25 @@ Write-Host "| Pepitenet.Powershell.IoT |" -ForegroundColor Cyan
 Write-Host "+--------------------------+" -ForegroundColor Cyan
 Write-Host ""
 
+function doBuildProject($loc)
+{
+
+    # Generates Pepitenet.Powershell.IoT
+    Push-Location $location\src
+    Write-Host "Generating Pepitenet.Powershell.IoT project" -ForegroundColor Cyan
+    & dotnet build -c Release -o $OutputFolder | Out-Null
+    Pop-Location
+    
+    Write-Host "Remove unnecessary files" -ForegroundColor Cyan
+    Write-Host "Remove pdb files" -ForegroundColor DarkCyan
+    Get-ChildItem -Path $OutputFolder -Filter "*.pdb" | Remove-Item
+    Write-Host "Remove json files" -ForegroundColor DarkCyan
+    Get-ChildItem -Path $OutputFolder -Filter "*.json" | Remove-Item
+    Write-Host "Remove xml files" -ForegroundColor DarkCyan
+    Get-ChildItem -Path $OutputFolder -Filter "*.xml" | Remove-Item
+
+}
+
 function doBuild($loc)
 {
     # Generates dependencies
@@ -35,20 +54,7 @@ function doBuild($loc)
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
 
-
-    # Generates Pepitenet.Powershell.IoT
-    Push-Location $location\src
-    Write-Host "Generating Pepitenet.Powershell.IoT project" -ForegroundColor Cyan
-    & dotnet build -c Release -o $OutputFolder | Out-Null
-    Pop-Location
-    
-    Write-Host "Remove unnecessary files" -ForegroundColor Cyan
-    Write-Host "Remove pdb files" -ForegroundColor DarkCyan
-    Get-ChildItem -Path $OutputFolder -Filter "*.pdb" | Remove-Item
-    Write-Host "Remove json files" -ForegroundColor DarkCyan
-    Get-ChildItem -Path $OutputFolder -Filter "*.json" | Remove-Item
-    Write-Host "Remove xml files" -ForegroundColor DarkCyan
-    Get-ChildItem -Path $OutputFolder -Filter "*.xml" | Remove-Item
+    doBuildProject $loc
 }
 
 function doClean($loc)
@@ -87,15 +93,14 @@ function doClean($loc)
     Pop-Location
 }
 
-# Init submodules
-git submodule update --init
-
 $location = Get-Location
 $OutputFolder = "$location\Output"
 
 switch($action)
 {
-    "build" {
+    "buildall" {
+        # Init submodules
+        git submodule update --init
         Write-Host "**** GENERATING PROJECT ****" -ForegroundColor Cyan
         Write-Host ""
         Write-Host "Creating Output Folder" -ForegroundColor Cyan
@@ -110,16 +115,36 @@ switch($action)
         Copy-Item .\Pepitenet.Powershell.IoT.psd1 $OutputFolder
 
     }
+    "build" {
+        Write-Host "**** GENERATING PROJECT ****" -ForegroundColor Cyan
+        Write-Host ""
+        if(-Not (Test-Path $OutputFolder))
+        {
+            Write-Host "Creating Output Folder" -ForegroundColor Cyan
+            New-Item -ItemType Directory -Path $OutputFolder | Out-Null
+        }
+
+        doBuildProject $location
+        
+        Copy-Item .\Pepitenet.Powershell.IoT.psd1 $OutputFolder
+
+    }
     "clean" {
         Write-Host "**** CLEANING PROJECT ****" -ForegroundColor Cyan
         Write-Host ""
         doClean $location
 
-        Write-Host "Removing Output folder" -ForegroundColor Cyan
         if(Test-Path $OutputFolder)
         {
-            Remove-Item -Path $OutputFolder -Recurse -Force
+            Write-Host "Removing Output folder content" -ForegroundColor Cyan
+            Get-ChildItem -Path $OutputFolder | Remove-Item
         }
+    }
+    default {
+        Write-Host "Please select of of these options :" -ForegroundColor Cyan
+        Write-Host "- 'build' : Only build Pepitenet.Powershell.Iot" -ForegroundColor Cyan
+        Write-Host "- 'buildall' : Build Pepitenet.Powershell.Iot and all its dependencies" -ForegroundColor Cyan
+        Write-Host "- 'clean'" -ForegroundColor Cyan
     }
 }
 Write-Host ""
