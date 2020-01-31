@@ -29,27 +29,27 @@ function doBuild($loc)
 {
     # Generates dependencies
     Write-Host "Generating Dependencies" -ForegroundColor Cyan
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\raspberryio\src\Unosquare.RaspberryIO"
+    Push-Location "$location\submodule\raspberryio\src\Unosquare.RaspberryIO"
     Write-Host "Generating Unosquare.RaspberryIO project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\raspberryio\src\Unosquare.RaspberryIO.Abstractions"
+    Push-Location "$location\submodule\raspberryio\src\Unosquare.RaspberryIO.Abstractions"
     Write-Host "Generating Unosquare.RaspberryIO.Abstractions project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\raspberryio\src\Unosquare.RaspberryIO.Peripherals"
+    Push-Location "$location\submodule\raspberryio\src\Unosquare.RaspberryIO.Peripherals"
     Write-Host "Generating Unosquare.RaspberryIO.Peripherals project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\swan\src\Swan"
+    Push-Location "$location\submodule\swan\src\Swan"
     Write-Host "Generating Swan project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\swan\src\Swan.Lite"
+    Push-Location "$location\submodule\swan\src\Swan.Lite"
     Write-Host "Generating Swan.Lite project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
-    Push-Location "C:\Users\mathi\OneDrive\Documents\PowerShell\Pepitenet.Powershell.IoT\submodule\wiringpi-dotnet\src\Unosquare.WiringPi"
+    Push-Location "$location\submodule\wiringpi-dotnet\src\Unosquare.WiringPi"
     Write-Host "Generating Unosquare.WiringPi project" -ForegroundColor DarkCyan
     & dotnet build -c Release -o $OutputFolder -f netstandard2.0 | Out-Null
     Pop-Location
